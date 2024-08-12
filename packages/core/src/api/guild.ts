@@ -687,11 +687,12 @@ export class GuildsAPI {
 	/**
 	 * Edits a user's voice state in a guild
 	 *
-	 * @see {@link https://discord.com/developers/docs/resources/guild#modify-user-voice-state}
+	 * @see {@link https://discord.com/developers/docs/resources/user#modify-user-voice-state}
 	 * @param guildId - The id of the guild to edit the current user's voice state in
 	 * @param userId - The id of the user to edit the voice state for
 	 * @param body - The data for editing the voice state
 	 * @param options - The options for editing the voice state
+	 * @deprecated Use {@link VoiceAPI#editUserVoiceState} instead
 	 */
 	public async editUserVoiceState(
 		guildId: Snowflake,

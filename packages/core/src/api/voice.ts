@@ -1,7 +1,14 @@
 /* eslint-disable jsdoc/check-param-names */
 
 import type { RequestData, REST } from '@discordjs/rest';
-import { Routes, type RESTGetAPIVoiceRegionsResult } from 'discord-api-types/v10';
+import {
+	Routes,
+	type Snowflake,
+	type RESTGetAPIVoiceRegionsResult,
+	type RESTGetAPIGuildVoiceStateUserResult,
+	type RESTGetAPIGuildVoiceStateCurrentMemberResult,
+	type RESTPatchAPIGuildVoiceStateUserJSONBody,
+} from 'discord-api-types/v10';
 
 export class VoiceAPI {
 	public constructor(private readonly rest: REST) {}
@@ -14,5 +21,47 @@ export class VoiceAPI {
 	 */
 	public async getVoiceRegions({ signal }: Pick<RequestData, 'signal'> = {}) {
 		return this.rest.get(Routes.voiceRegions(), { signal }) as Promise<RESTGetAPIVoiceRegionsResult>;
+	}
+
+	/**
+	 * Fetches voice state of a user by their id
+	 *
+	 * @see {@link https://discord.com/developers/docs/resources/voice#get-user-voice-state}
+	 * @param options - The options for fetching user voice state
+	 */
+	public async getUserVoiceState(guildId: Snowflake, userId: Snowflake, { signal }: Pick<RequestData, 'signal'> = {}) {
+		return this.rest.get(Routes.guildVoiceState(guildId, userId), {
+			signal,
+		}) as Promise<RESTGetAPIGuildVoiceStateUserResult>;
+	}
+
+	/**
+	 * Fetches the current user's voice state
+	 *
+	 * @see {@link https://discord.com/developers/docs/resources/voice#get-current-user-voice-state}
+	 * @param options - The options for fetching user voice state
+	 */
+	public async getCurrentUserVoiceState(guildId: Snowflake, { signal }: Pick<RequestData, 'signal'> = {}) {
+		return this.rest.get(Routes.guildVoiceState(guildId, '@me'), {
+			signal,
+		}) as Promise<RESTGetAPIGuildVoiceStateCurrentMemberResult>;
+	}
+
+	/**
+	 * Edits a user's voice state in a guild
+	 *
+	 * @see {@link https://discord.com/developers/docs/resources/user#modify-user-voice-state}
+	 * @param guildId - The id of the guild to edit the current user's voice state in
+	 * @param userId - The id of the user to edit the voice state for
+	 * @param body - The data for editing the voice state
+	 * @param options - The options for editing the voice state
+	 */
+	public async editUserVoiceState(
+		guildId: Snowflake,
+		userId: Snowflake,
+		body: RESTPatchAPIGuildVoiceStateUserJSONBody,
+		{ reason, signal }: Pick<RequestData, 'reason' | 'signal'> = {},
+	) {
+		await this.rest.patch(Routes.guildVoiceState(guildId, userId), { reason, body, signal });
 	}
 }
