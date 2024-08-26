@@ -754,4 +754,8 @@ export enum GuildNavigationMentions {
 	 * {@link https://support.discord.com/hc/articles/13497665141655 | Server Guide} tab.
 	 */
 	Guide = '<id:guide>',
+	/**
+	 * {@link https://support.discord.com/hc/en-us/articles/10388356626711-Connections-Linked-Roles-Admins | Linked Roles} tab
+	 */
+	LinkedRoles = '<id:linked-roles>',
 }
