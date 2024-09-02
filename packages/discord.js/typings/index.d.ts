@@ -4498,7 +4498,7 @@ export abstract class MessageManager<InGuild extends boolean = boolean> extends 
   MessageResolvable
 > {
   protected constructor(channel: TextBasedChannel, iterable?: Iterable<RawMessageData>);
-  public channel: TextBasedChannel;
+  public channel: TextBasedChannel | PartialGroupDMChannel;
   public delete(message: MessageResolvable): Promise<void>;
   public edit(
     message: MessageResolvable,
@@ -6876,7 +6876,10 @@ export type Channel =
   | ForumChannel
   | MediaChannel;
 
-export type TextBasedChannel = Exclude<Extract<Channel, { type: TextChannelType }>, ForumChannel | MediaChannel>;
+export type TextBasedChannel = Exclude<
+  Extract<Channel, { type: TextChannelType }>,
+  ForumChannel | MediaChannel | PartialGroupDMChannel
+>;
 
 export type TextBasedChannels = TextBasedChannel;
 

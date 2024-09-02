@@ -128,7 +128,7 @@ class BaseChannel extends Base {
    * @returns {boolean}
    */
   isTextBased() {
-    return 'messages' in this;
+    return 'send' in this;
   }
 
   /**
