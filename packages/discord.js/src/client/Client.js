@@ -44,6 +44,8 @@ const BeforeReadyWhitelist = [
   GatewayDispatchEvents.GuildMemberRemove,
 ];
 
+let emiitedMissingGuildsIntentWarning = false;
+
 /**
  * The main hub for interacting with the Discord API, and the starting point for any bot.
  * @extends {BaseClient}
@@ -690,6 +692,14 @@ class Client extends BaseClient {
       throw new DiscordjsTypeError(ErrorCodes.ClientMissingIntents);
     } else {
       options.intents = new IntentsBitField(options.intents ?? options.ws.intents).freeze();
+      if (!(options.intents.bitfield & GatewayIntentBits.Guilds) && !emiitedMissingGuildsIntentWarning) {
+        process.emitWarning(
+          // eslint-disable-next-line max-len
+          'Missing "Guilds" intent. discord.js heavily relies on guilds intent for internal workings, not providing it may cause some part of discord.js to not work properly.',
+          'MissingIntent',
+        );
+        emiitedMissingGuildsIntentWarning = true;
+      }
     }
     if (typeof options.sweepers !== 'object' || options.sweepers === null) {
       throw new DiscordjsTypeError(ErrorCodes.ClientInvalidOption, 'sweepers', 'an object');
