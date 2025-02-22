@@ -1,26 +1,17 @@
+import * as v10 from "discord-api-types/v10";
+import { BitField } from "./BitField.js";
 'use strict';
-
-const { SKUFlags } = require('discord-api-types/v10');
-const { BitField } = require('./BitField.js');
-
+const { SKUFlags } = v10;
 /**
  * Data structure that makes it easy to interact with an {@link SKU#flags} bitfield.
  * @extends {BitField}
  */
 class SKUFlagsBitField extends BitField {
-  /**
-   * Numeric SKU flags.
-   * @type {SKUFlags}
-   * @memberof SKUFlagsBitField
-   */
-  static Flags = SKUFlags;
+    /**
+     * Numeric SKU flags.
+     * @type {SKUFlags}
+     * @memberof SKUFlagsBitField
+     */
+    static Flags = SKUFlags;
 }
-
-/**
- * @name SKUFlagsBitField
- * @kind constructor
- * @memberof SKUFlagsBitField
- * @param {BitFieldResolvable} [bits=0] Bit(s) to read from
- */
-
-exports.SKUFlagsBitField = SKUFlagsBitField;
+export { SKUFlagsBitField };

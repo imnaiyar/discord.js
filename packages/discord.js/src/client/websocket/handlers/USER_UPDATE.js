@@ -1,5 +1,4 @@
 'use strict';
-
-module.exports = (client, packet) => {
-  client.actions.UserUpdate.handle(packet.d);
+export default (client, packet) => {
+    client.actions.UserUpdate.handle(packet.d);
 };

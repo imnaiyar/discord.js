@@ -1,26 +1,17 @@
+import * as v10 from "discord-api-types/v10";
+import { BitField } from "./BitField.js";
 'use strict';
-
-const { RoleFlags } = require('discord-api-types/v10');
-const { BitField } = require('./BitField.js');
-
+const { RoleFlags } = v10;
 /**
  * Data structure that makes it easy to interact with a {@link Role#flags} bitfield.
  * @extends {BitField}
  */
 class RoleFlagsBitField extends BitField {
-  /**
-   * Numeric role flags.
-   * @type {RoleFlags}
-   * @memberof RoleFlagsBitField
-   */
-  static Flags = RoleFlags;
+    /**
+     * Numeric role flags.
+     * @type {RoleFlags}
+     * @memberof RoleFlagsBitField
+     */
+    static Flags = RoleFlags;
 }
-
-/**
- * @name RoleFlagsBitField
- * @kind constructor
- * @memberof RoleFlagsBitField
- * @param {BitFieldResolvable} [bits=0] Bit(s) to read from
- */
-
-exports.RoleFlagsBitField = RoleFlagsBitField;
+export { RoleFlagsBitField };

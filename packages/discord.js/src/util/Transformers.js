@@ -1,21 +1,22 @@
+import { isJSONEncodable } from "@discordjs/util";
+import snakeCase from "lodash.snakecase";
 'use strict';
-
-const { isJSONEncodable } = require('@discordjs/util');
-const snakeCase = require('lodash.snakecase');
-
 /**
  * Transforms camel-cased keys into snake cased keys
  * @param {*} obj The object to transform
  * @returns {*}
  */
 function toSnakeCase(obj) {
-  if (typeof obj !== 'object' || !obj) return obj;
-  if (obj instanceof Date) return obj;
-  if (isJSONEncodable(obj)) return toSnakeCase(obj.toJSON());
-  if (Array.isArray(obj)) return obj.map(toSnakeCase);
-  return Object.fromEntries(Object.entries(obj).map(([key, value]) => [snakeCase(key), toSnakeCase(value)]));
+    if (typeof obj !== 'object' || !obj)
+        return obj;
+    if (obj instanceof Date)
+        return obj;
+    if (isJSONEncodable(obj))
+        return toSnakeCase(obj.toJSON());
+    if (Array.isArray(obj))
+        return obj.map(toSnakeCase);
+    return Object.fromEntries(Object.entries(obj).map(([key, value]) => [snakeCase(key), toSnakeCase(value)]));
 }
-
 /**
  * Transforms an API auto moderation action object to a camel-cased variant.
  * @param {APIAutoModerationAction} autoModerationAction The action to transform
@@ -23,16 +24,15 @@ function toSnakeCase(obj) {
  * @ignore
  */
 function _transformAPIAutoModerationAction(autoModerationAction) {
-  return {
-    type: autoModerationAction.type,
-    metadata: {
-      durationSeconds: autoModerationAction.metadata.duration_seconds ?? null,
-      channelId: autoModerationAction.metadata.channel_id ?? null,
-      customMessage: autoModerationAction.metadata.custom_message ?? null,
-    },
-  };
+    return {
+        type: autoModerationAction.type,
+        metadata: {
+            durationSeconds: autoModerationAction.metadata.duration_seconds ?? null,
+            channelId: autoModerationAction.metadata.channel_id ?? null,
+            customMessage: autoModerationAction.metadata.custom_message ?? null,
+        },
+    };
 }
-
 /**
  * Transforms an API message interaction metadata object to a camel-cased variant.
  * @param {Client} client The client
@@ -41,19 +41,18 @@ function _transformAPIAutoModerationAction(autoModerationAction) {
  * @ignore
  */
 function _transformAPIMessageInteractionMetadata(client, messageInteractionMetadata) {
-  return {
-    id: messageInteractionMetadata.id,
-    type: messageInteractionMetadata.type,
-    user: client.users._add(messageInteractionMetadata.user),
-    authorizingIntegrationOwners: messageInteractionMetadata.authorizing_integration_owners,
-    originalResponseMessageId: messageInteractionMetadata.original_response_message_id ?? null,
-    interactedMessageId: messageInteractionMetadata.interacted_message_id ?? null,
-    triggeringInteractionMetadata: messageInteractionMetadata.triggering_interaction_metadata
-      ? _transformAPIMessageInteractionMetadata(client, messageInteractionMetadata.triggering_interaction_metadata)
-      : null,
-  };
+    return {
+        id: messageInteractionMetadata.id,
+        type: messageInteractionMetadata.type,
+        user: client.users._add(messageInteractionMetadata.user),
+        authorizingIntegrationOwners: messageInteractionMetadata.authorizing_integration_owners,
+        originalResponseMessageId: messageInteractionMetadata.original_response_message_id ?? null,
+        interactedMessageId: messageInteractionMetadata.interacted_message_id ?? null,
+        triggeringInteractionMetadata: messageInteractionMetadata.triggering_interaction_metadata
+            ? _transformAPIMessageInteractionMetadata(client, messageInteractionMetadata.triggering_interaction_metadata)
+            : null,
+    };
 }
-
 /**
  * Transforms a guild scheduled event recurrence rule object to a snake-cased variant.
  * @param {GuildScheduledEventRecurrenceRuleOptions} recurrenceRule The recurrence rule to transform
@@ -61,17 +60,16 @@ function _transformAPIMessageInteractionMetadata(client, messageInteractionMetad
  * @ignore
  */
 function _transformGuildScheduledEventRecurrenceRule(recurrenceRule) {
-  return {
-    start: new Date(recurrenceRule.startAt).toISOString(),
-    frequency: recurrenceRule.frequency,
-    interval: recurrenceRule.interval,
-    by_weekday: recurrenceRule.byWeekday,
-    by_n_weekday: recurrenceRule.byNWeekday,
-    by_month: recurrenceRule.byMonth,
-    by_month_day: recurrenceRule.byMonthDay,
-  };
+    return {
+        start: new Date(recurrenceRule.startAt).toISOString(),
+        frequency: recurrenceRule.frequency,
+        interval: recurrenceRule.interval,
+        by_weekday: recurrenceRule.byWeekday,
+        by_n_weekday: recurrenceRule.byNWeekday,
+        by_month: recurrenceRule.byMonth,
+        by_month_day: recurrenceRule.byMonthDay,
+    };
 }
-
 /**
  * Transforms API incidents data to a camel-cased variant.
  * @param {APIIncidentsData} data The incidents data to transform
@@ -79,16 +77,15 @@ function _transformGuildScheduledEventRecurrenceRule(recurrenceRule) {
  * @ignore
  */
 function _transformAPIIncidentsData(data) {
-  return {
-    invitesDisabledUntil: data.invites_disabled_until ? new Date(data.invites_disabled_until) : null,
-    dmsDisabledUntil: data.dms_disabled_until ? new Date(data.dms_disabled_until) : null,
-    dmSpamDetectedAt: data.dm_spam_detected_at ? new Date(data.dm_spam_detected_at) : null,
-    raidDetectedAt: data.raid_detected_at ? new Date(data.raid_detected_at) : null,
-  };
+    return {
+        invitesDisabledUntil: data.invites_disabled_until ? new Date(data.invites_disabled_until) : null,
+        dmsDisabledUntil: data.dms_disabled_until ? new Date(data.dms_disabled_until) : null,
+        dmSpamDetectedAt: data.dm_spam_detected_at ? new Date(data.dm_spam_detected_at) : null,
+        raidDetectedAt: data.raid_detected_at ? new Date(data.raid_detected_at) : null,
+    };
 }
-
-exports.toSnakeCase = toSnakeCase;
-exports._transformAPIAutoModerationAction = _transformAPIAutoModerationAction;
-exports._transformAPIMessageInteractionMetadata = _transformAPIMessageInteractionMetadata;
-exports._transformGuildScheduledEventRecurrenceRule = _transformGuildScheduledEventRecurrenceRule;
-exports._transformAPIIncidentsData = _transformAPIIncidentsData;
+export { toSnakeCase };
+export { _transformAPIAutoModerationAction };
+export { _transformAPIMessageInteractionMetadata };
+export { _transformGuildScheduledEventRecurrenceRule };
+export { _transformAPIIncidentsData };

@@ -1,11 +1,9 @@
+import { MessageComponentInteraction } from "./MessageComponentInteraction.js";
 'use strict';
-
-const { MessageComponentInteraction } = require('./MessageComponentInteraction.js');
-
 /**
  * Represents a button interaction.
  * @extends {MessageComponentInteraction}
  */
-class ButtonInteraction extends MessageComponentInteraction {}
-
-exports.ButtonInteraction = ButtonInteraction;
+class ButtonInteraction extends MessageComponentInteraction {
+}
+export { ButtonInteraction };

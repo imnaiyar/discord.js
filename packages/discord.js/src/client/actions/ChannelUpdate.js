@@ -1,42 +1,34 @@
+import { Action } from "./Action.js";
+import { createChannel } from "../../util/Channels.js";
 'use strict';
-
-const { Action } = require('./Action.js');
-const { createChannel } = require('../../util/Channels.js');
-
 class ChannelUpdateAction extends Action {
-  handle(data) {
-    const client = this.client;
-    let channel = client.channels.cache.get(data.id);
-
-    if (channel) {
-      const old = channel._update(data);
-
-      if (channel.type !== data.type) {
-        const newChannel = createChannel(this.client, data, channel.guild);
-
-        if (!newChannel) {
-          this.client.channels.cache.delete(channel.id);
-          return {};
+    handle(data) {
+        const client = this.client;
+        let channel = client.channels.cache.get(data.id);
+        if (channel) {
+            const old = channel._update(data);
+            if (channel.type !== data.type) {
+                const newChannel = createChannel(this.client, data, channel.guild);
+                if (!newChannel) {
+                    this.client.channels.cache.delete(channel.id);
+                    return {};
+                }
+                if (channel.isTextBased() && newChannel.isTextBased()) {
+                    for (const [id, message] of channel.messages.cache)
+                        newChannel.messages.cache.set(id, message);
+                }
+                channel = newChannel;
+                this.client.channels.cache.set(channel.id, channel);
+            }
+            return {
+                old,
+                updated: channel,
+            };
         }
-
-        if (channel.isTextBased() && newChannel.isTextBased()) {
-          for (const [id, message] of channel.messages.cache) newChannel.messages.cache.set(id, message);
+        else {
+            client.channels._add(data);
         }
-
-        channel = newChannel;
-        this.client.channels.cache.set(channel.id, channel);
-      }
-
-      return {
-        old,
-        updated: channel,
-      };
-    } else {
-      client.channels._add(data);
+        return {};
     }
-
-    return {};
-  }
 }
-
-exports.ChannelUpdateAction = ChannelUpdateAction;
+export { ChannelUpdateAction };

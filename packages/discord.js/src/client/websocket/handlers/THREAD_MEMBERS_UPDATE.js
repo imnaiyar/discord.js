@@ -1,5 +1,4 @@
 'use strict';
-
-module.exports = (client, packet) => {
-  client.actions.ThreadMembersUpdate.handle(packet.d);
+export default (client, packet) => {
+    client.actions.ThreadMembersUpdate.handle(packet.d);
 };

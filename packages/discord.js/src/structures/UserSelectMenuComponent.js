@@ -1,11 +1,9 @@
+import { BaseSelectMenuComponent } from "./BaseSelectMenuComponent.js";
 'use strict';
-
-const { BaseSelectMenuComponent } = require('./BaseSelectMenuComponent.js');
-
 /**
  * Represents a user select menu component
  * @extends {BaseSelectMenuComponent}
  */
-class UserSelectMenuComponent extends BaseSelectMenuComponent {}
-
-exports.UserSelectMenuComponent = UserSelectMenuComponent;
+class UserSelectMenuComponent extends BaseSelectMenuComponent {
+}
+export { UserSelectMenuComponent };

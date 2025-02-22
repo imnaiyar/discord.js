@@ -1,7 +1,16 @@
+import { DiscordjsError } from "./DJSError.js";
+import { DiscordjsTypeError } from "./DJSError.js";
+import { DiscordjsRangeError } from "./DJSError.js";
+import { ErrorCodes } from "./ErrorCodes.js";
+import { Messages } from "./Messages.js";
 'use strict';
-
-exports.DiscordjsError = require('./DJSError.js').DiscordjsError;
-exports.DiscordjsTypeError = require('./DJSError.js').DiscordjsTypeError;
-exports.DiscordjsRangeError = require('./DJSError.js').DiscordjsRangeError;
-exports.ErrorCodes = require('./ErrorCodes.js').ErrorCodes;
-exports.Messages = require('./Messages.js').Messages;
+const DiscordjsError$0 = { DiscordjsError }.DiscordjsError;
+const DiscordjsTypeError$0 = { DiscordjsTypeError }.DiscordjsTypeError;
+const DiscordjsRangeError$0 = { DiscordjsRangeError }.DiscordjsRangeError;
+const ErrorCodes$0 = { ErrorCodes }.ErrorCodes;
+const Messages$0 = { Messages }.Messages;
+export { DiscordjsError$0 as DiscordjsError };
+export { DiscordjsTypeError$0 as DiscordjsTypeError };
+export { DiscordjsRangeError$0 as DiscordjsRangeError };
+export { ErrorCodes$0 as ErrorCodes };
+export { Messages$0 as Messages };

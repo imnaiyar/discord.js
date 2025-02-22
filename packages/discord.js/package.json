@@ -3,6 +3,7 @@
   "name": "discord.js",
   "version": "14.16.3",
   "description": "A powerful library for interacting with the Discord API",
+  "type": "module",
   "scripts": {
     "test": "pnpm run docs:test && pnpm run test:typescript",
     "test:typescript": "tsc --noEmit && tsd",
