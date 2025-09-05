@@ -50,6 +50,7 @@ import {
   APIInteractionDataResolvedChannel,
   APIInteractionDataResolvedGuildMember,
   APIInteractionGuildMember,
+  APILabelComponent,
   APIMediaGalleryComponent,
   APIMediaGalleryItem,
   APIMentionableSelectComponent,
@@ -65,6 +66,7 @@ import {
   APIMessageTopLevelComponent,
   APIMessageUserSelectInteractionData,
   APIModalComponent,
+  APIModalInteractionResponseCallbackComponent,
   APIModalInteractionResponseCallbackData,
   APIModalSubmitInteraction,
   APIOverwrite,
@@ -248,6 +250,7 @@ export class Activity {
 export type ActivityFlagsString = keyof typeof ActivityFlags;
 
 export interface BaseComponentData {
+  id?: number;
   type: ComponentType;
 }
 
@@ -260,15 +263,20 @@ export type MessageActionRowComponentData =
   | StringSelectMenuComponentData
   | UserSelectMenuComponentData;
 
-export type ModalActionRowComponentData = JSONEncodable<APIComponentInModalActionRow> | TextInputComponentData;
+export type ActionRowComponentData = MessageActionRowComponentData;
 
-export type ActionRowComponentData = MessageActionRowComponentData | ModalActionRowComponentData;
-
-export type ActionRowComponent = MessageActionRowComponent | ModalActionRowComponent;
+export type ActionRowComponent = MessageActionRowComponent;
 
 export interface ActionRowData<ComponentType extends ActionRowComponentData | JSONEncodable<APIComponentInActionRow>>
   extends BaseComponentData {
   components: readonly ComponentType[];
+}
+
+export type ComponentInLabelData = StringSelectMenuComponentData | TextInputComponentData;
+export interface LabelData extends BaseComponentData {
+  component: ComponentInLabelData;
+  description?: string;
+  label: string;
 }
 
 export type MessageActionRowComponent =
@@ -278,12 +286,11 @@ export type MessageActionRowComponent =
   | RoleSelectMenuComponent
   | StringSelectMenuComponent
   | UserSelectMenuComponent;
-export type ModalActionRowComponent = TextInputComponent;
 
-export class ActionRow<ComponentType extends MessageActionRowComponent | ModalActionRowComponent> extends Component<
-  APIActionRowComponent<APIComponentInMessageActionRow | APIComponentInModalActionRow>
+export class ActionRow<ComponentType extends MessageActionRowComponent> extends Component<
+  APIActionRowComponent<APIComponentInMessageActionRow>
 > {
-  private constructor(data: APIActionRowComponent<APIComponentInMessageActionRow | APIComponentInModalActionRow>);
+  private constructor(data: APIActionRowComponent<APIComponentInMessageActionRow>);
   public readonly components: ComponentType[];
   public toJSON(): APIActionRowComponent<ReturnType<ComponentType['toJSON']>>;
 }
@@ -738,6 +745,12 @@ export type ComponentEmojiResolvable = APIMessageComponentEmoji | string;
 export class TextInputComponent extends Component<APITextInputComponent> {
   public get customId(): string;
   public get value(): string;
+}
+
+export class LabelComponent extends Component<APILabelComponent> {
+  public component: StringSelectMenuComponent | TextInputComponent;
+  public get label(): string;
+  public get description(): string | null;
 }
 
 export class BaseSelectMenuComponent<Data extends APISelectMenuComponent> extends Component<Data> {
@@ -2521,36 +2534,119 @@ export interface MessageReactionEventDetails {
 }
 
 export interface ModalComponentData {
-  components: readonly (
-    | ActionRowData<ModalActionRowComponentData>
-    | JSONEncodable<APIActionRowComponent<APIComponentInModalActionRow>>
-  )[];
+  components: readonly LabelData[];
   customId: string;
   title: string;
 }
 
-export interface BaseModalData {
-  customId: string;
-  type: ComponentType;
+export interface BaseModalData<Type extends ComponentType> {
+  id: number;
+  type: Type;
 }
 
-export interface TextInputModalData extends BaseModalData {
-  type: ComponentType.TextInput;
+export interface TextInputModalData extends BaseModalData<ComponentType.TextInput> {
+  customId: string;
   value: string;
 }
 
-export interface ActionRowModalData {
-  components: readonly TextInputModalData[];
-  type: ComponentType.ActionRow;
+export interface SelectMenuModalData<Cached extends CacheType = CacheType>
+  extends BaseModalData<
+    | ComponentType.ChannelSelect
+    | ComponentType.MentionableSelect
+    | ComponentType.RoleSelect
+    | ComponentType.StringSelect
+    | ComponentType.UserSelect
+  > {
+  channels?: ReadonlyCollection<
+    Snowflake,
+    CacheTypeReducer<Cached, GuildBasedChannel, APIInteractionDataResolvedChannel>
+  >;
+  customId: string;
+  members?: ReadonlyCollection<Snowflake, CacheTypeReducer<Cached, GuildMember, APIInteractionDataResolvedGuildMember>>;
+  roles?: ReadonlyCollection<Snowflake, CacheTypeReducer<Cached, Role, APIRole>>;
+  users?: ReadonlyCollection<Snowflake, User>;
+  values: readonly string[];
 }
 
-export class ModalSubmitFields {
-  private constructor(components: readonly (readonly ModalActionRowComponent[])[]);
-  public components: ActionRowModalData[];
-  public fields: Collection<string, TextInputModalData>;
-  public getField<Type extends ComponentType>(customId: string, type: Type): TextInputModalData & { type: Type };
-  public getField(customId: string, type?: ComponentType): TextInputModalData;
+export type ModalData = SelectMenuModalData | TextInputModalData;
+
+export interface LabelModalData extends BaseModalData<ComponentType.Label> {
+  component: readonly ModalData[];
+}
+export interface ActionRowModalData extends BaseModalData<ComponentType.ActionRow> {
+  components: readonly TextInputModalData[];
+}
+
+export interface TextDisplayModalData extends BaseModalData<ComponentType.TextDisplay> {}
+
+export class ModalComponentResolver<Cached extends CacheType = CacheType> {
+  private constructor(client: Client<true>, components: readonly ModalData[], resolved: BaseInteractionResolvedData);
+  public readonly client: Client<true>;
+  public readonly data: readonly (ActionRowModalData | LabelModalData | TextDisplayModalData)[];
+  public readonly resolved: BaseInteractionResolvedData<Cached>;
+  public readonly hoistedComponents: ReadonlyCollection<string, ModalData>;
+  public getComponent(customId: string): ModalData;
+  private _getTypedComponent(
+    customId: string,
+    allowedTypes: readonly ComponentType[],
+    properties: string,
+    required: boolean,
+  ): ModalData;
   public getTextInputValue(customId: string): string;
+  public getStringSelectValues(customId: string): readonly string[];
+  public getUsers(customId: string, required: true): ReadonlyCollection<Snowflake, User>;
+  public getUsers(customId: string, required?: boolean): ReadonlyCollection<Snowflake, User> | null;
+  public getMembers(customId: string): NonNullable<SelectMenuModalData<Cached>['members']> | null;
+  public getChannels<const Type extends ChannelType = ChannelType>(
+    customId: string,
+    required: true,
+    channelTypes?: readonly Type[],
+  ): ReadonlyCollection<
+    Snowflake,
+    Extract<
+      NonNullable<CommandInteractionOption<Cached>['channel']>,
+      {
+        type: Type extends ChannelType.AnnouncementThread | ChannelType.PublicThread
+          ? ChannelType.AnnouncementThread | ChannelType.PublicThread
+          : Type;
+      }
+    >
+  >;
+  public getChannels<const Type extends ChannelType = ChannelType>(
+    customId: string,
+    required?: boolean,
+    channelTypes?: readonly Type[],
+  ): ReadonlyCollection<
+    Snowflake,
+    Extract<
+      NonNullable<CommandInteractionOption<Cached>['channel']>,
+      {
+        type: Type extends ChannelType.AnnouncementThread | ChannelType.PublicThread
+          ? ChannelType.AnnouncementThread | ChannelType.PublicThread
+          : Type;
+      }
+    >
+  > | null;
+
+  public getRoles(customId: string, required: true): NonNullable<SelectMenuModalData<Cached>['roles']>;
+  public getRoles(customId: string, required?: boolean): NonNullable<SelectMenuModalData<Cached>['roles']> | null;
+
+  public getMentionables(
+    customId: string,
+    required: true,
+  ): {
+    members: NonNullable<SelectMenuModalData<Cached>['members']>;
+    roles: NonNullable<SelectMenuModalData<Cached>['roles']>;
+    users: NonNullable<SelectMenuModalData<Cached>['users']>;
+  };
+  public getMentionables(
+    customId: string,
+    required?: boolean,
+  ): {
+    members: NonNullable<SelectMenuModalData<Cached>['members']>;
+    roles: NonNullable<SelectMenuModalData<Cached>['roles']>;
+    users: NonNullable<SelectMenuModalData<Cached>['users']>;
+  } | null;
 }
 
 export interface ModalMessageModalSubmitInteraction<Cached extends CacheType = CacheType>
@@ -2573,8 +2669,7 @@ export class ModalSubmitInteraction<Cached extends CacheType = CacheType> extend
   private constructor(client: Client<true>, data: APIModalSubmitInteraction);
   public type: InteractionType.ModalSubmit;
   public readonly customId: string;
-  public readonly components: ActionRowModalData[];
-  public readonly fields: ModalSubmitFields;
+  public readonly components: ModalComponentResolver<Cached>;
   public deferred: boolean;
   public ephemeral: boolean | null;
   public message: Message<BooleanCache<Cached>> | null;
@@ -3639,9 +3734,10 @@ export function verifyString(data: string, error?: typeof Error, errorMessage?: 
 
 export type ComponentData =
   | ComponentInContainerData
+  | ComponentInLabelData
   | ContainerComponentData
+  | LabelData
   | MessageActionRowComponentData
-  | ModalActionRowComponentData
   | ThumbnailComponentData;
 
 export interface SendSoundboardSoundOptions {
@@ -3989,8 +4085,10 @@ export enum DiscordjsErrorCodes {
   CommandInteractionOptionNoSubcommandGroup = 'CommandInteractionOptionNoSubcommandGroup',
   AutocompleteInteractionOptionNoFocusedOption = 'AutocompleteInteractionOptionNoFocusedOption',
 
-  ModalSubmitInteractionFieldNotFound = 'ModalSubmitInteractionFieldNotFound',
-  ModalSubmitInteractionFieldType = 'ModalSubmitInteractionFieldType',
+  ModalSubmitInteractionComponentNotFound = 'ModalSubmitInteractionComponentNotFound',
+  ModalSubmitInteractionComponentType = 'ModalSubmitInteractionComponentType',
+  ModalSubmitInteractionComponentEmpty = 'ModalSubmitInteractionComponentEmpty',
+  ModalSubmitInteractionComponentInvalidChannelType = 'ModalSubmitInteractionComponentInvalidChannelType',
 
   InvalidMissingScopes = 'InvalidMissingScopes',
   InvalidScopesWithPermissions = 'InvalidScopesWithPermissions',
@@ -5513,13 +5611,17 @@ export interface CommandInteractionOption<Cached extends CacheType = CacheType> 
   value?: boolean | number | string;
 }
 
-export interface CommandInteractionResolvedData<Cached extends CacheType = CacheType> {
-  attachments?: ReadonlyCollection<Snowflake, Attachment>;
+export interface BaseInteractionResolvedData<Cached extends CacheType = CacheType> {
   channels?: ReadonlyCollection<Snowflake, CacheTypeReducer<Cached, Channel, APIInteractionDataResolvedChannel>>;
   members?: ReadonlyCollection<Snowflake, CacheTypeReducer<Cached, GuildMember, APIInteractionDataResolvedGuildMember>>;
-  messages?: ReadonlyCollection<Snowflake, CacheTypeReducer<Cached, Message, APIMessage>>;
+
   roles?: ReadonlyCollection<Snowflake, CacheTypeReducer<Cached, Role, APIRole>>;
   users?: ReadonlyCollection<Snowflake, User>;
+}
+export interface CommandInteractionResolvedData<Cached extends CacheType = CacheType>
+  extends BaseInteractionResolvedData<Cached> {
+  attachments?: ReadonlyCollection<Snowflake, Attachment>;
+  messages?: ReadonlyCollection<Snowflake, CacheTypeReducer<Cached, Message, APIMessage>>;
 }
 
 export interface AutocompleteFocusedOption {
@@ -6650,6 +6752,7 @@ export interface BaseSelectMenuComponentData extends BaseComponentData {
 
 export interface StringSelectMenuComponentData extends BaseSelectMenuComponentData {
   options: readonly SelectMenuComponentOptionData[];
+  required?: boolean;
   type: ComponentType.StringSelect;
 }
 
@@ -6699,7 +6802,6 @@ export interface SelectMenuComponentOptionData {
 
 export interface TextInputComponentData extends BaseComponentData {
   customId: string;
-  label: string;
   maxLength?: number;
   minLength?: number;
   placeholder?: string;
