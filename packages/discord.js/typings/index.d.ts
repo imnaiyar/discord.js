@@ -272,7 +272,13 @@ export interface ActionRowData<ComponentType extends ActionRowComponentData | JS
   components: readonly ComponentType[];
 }
 
-export type ComponentInLabelData = StringSelectMenuComponentData | TextInputComponentData;
+export type ComponentInLabelData =
+  | ChannelSelectMenuComponentData
+  | MentionableSelectMenuComponentData
+  | RoleSelectMenuComponentData
+  | StringSelectMenuComponentData
+  | TextInputComponentData
+  | UserSelectMenuComponentData;
 export interface LabelData extends BaseComponentData {
   component: ComponentInLabelData;
   description?: string;
@@ -2534,7 +2540,7 @@ export interface MessageReactionEventDetails {
 }
 
 export interface ModalComponentData {
-  components: readonly LabelData[];
+  components: readonly (LabelData | TextDisplayComponentData)[];
   customId: string;
   title: string;
 }
@@ -2592,12 +2598,13 @@ export class ModalComponentResolver<Cached extends CacheType = CacheType> {
     properties: string,
     required: boolean,
   ): ModalData;
-  public getTextInputValue(customId: string): string;
+  public getTextInputValue(customId: string, required: true): string;
+  public getTextInputValue(customId: string, required?: boolean): string | null;
   public getStringSelectValues(customId: string): readonly string[];
-  public getUsers(customId: string, required: true): ReadonlyCollection<Snowflake, User>;
-  public getUsers(customId: string, required?: boolean): ReadonlyCollection<Snowflake, User> | null;
-  public getMembers(customId: string): NonNullable<SelectMenuModalData<Cached>['members']> | null;
-  public getChannels<const Type extends ChannelType = ChannelType>(
+  public getSelectedUsers(customId: string, required: true): ReadonlyCollection<Snowflake, User>;
+  public getSelectedUsers(customId: string, required?: boolean): ReadonlyCollection<Snowflake, User> | null;
+  public getSelectedMembers(customId: string): NonNullable<SelectMenuModalData<Cached>['members']> | null;
+  public getSelectedChannels<const Type extends ChannelType = ChannelType>(
     customId: string,
     required: true,
     channelTypes?: readonly Type[],
@@ -2612,7 +2619,7 @@ export class ModalComponentResolver<Cached extends CacheType = CacheType> {
       }
     >
   >;
-  public getChannels<const Type extends ChannelType = ChannelType>(
+  public getSelectedChannels<const Type extends ChannelType = ChannelType>(
     customId: string,
     required?: boolean,
     channelTypes?: readonly Type[],
@@ -2628,10 +2635,13 @@ export class ModalComponentResolver<Cached extends CacheType = CacheType> {
     >
   > | null;
 
-  public getRoles(customId: string, required: true): NonNullable<SelectMenuModalData<Cached>['roles']>;
-  public getRoles(customId: string, required?: boolean): NonNullable<SelectMenuModalData<Cached>['roles']> | null;
+  public getSelectedRoles(customId: string, required: true): NonNullable<SelectMenuModalData<Cached>['roles']>;
+  public getSelectedRoles(
+    customId: string,
+    required?: boolean,
+  ): NonNullable<SelectMenuModalData<Cached>['roles']> | null;
 
-  public getMentionables(
+  public getSelectedMentionables(
     customId: string,
     required: true,
   ): {
@@ -2639,7 +2649,7 @@ export class ModalComponentResolver<Cached extends CacheType = CacheType> {
     roles: NonNullable<SelectMenuModalData<Cached>['roles']>;
     users: NonNullable<SelectMenuModalData<Cached>['users']>;
   };
-  public getMentionables(
+  public getSelectedMentionables(
     customId: string,
     required?: boolean,
   ): {
@@ -6748,11 +6758,11 @@ export interface BaseSelectMenuComponentData extends BaseComponentData {
   maxValues?: number;
   minValues?: number;
   placeholder?: string;
+  required?: boolean;
 }
 
 export interface StringSelectMenuComponentData extends BaseSelectMenuComponentData {
   options: readonly SelectMenuComponentOptionData[];
-  required?: boolean;
   type: ComponentType.StringSelect;
 }
 
