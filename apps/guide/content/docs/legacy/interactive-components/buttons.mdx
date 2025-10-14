@@ -15,7 +15,7 @@ Buttons are one of the `MessageComponent` classes, which can be sent via message
 
 For this example, you're going to expand on the `ban` command that was previously covered on the [parsing options](../slash-commands/parsing-options) page with a confirmation workflow.
 
-To create your buttons, use the `ButtonBuilder` class, defining at least the `customId`, `style` and `label`.
+To create your buttons, use the <DocsLink section="builders" path="ButtonBuilder:Class"/> class, defining at least the `customId`, `style` and `label`.
 
 ```js
 const { ButtonBuilder, ButtonStyle, SlashCommandBuilder } = require('discord.js');
@@ -40,7 +40,7 @@ module.exports = {
 
 ## Sending buttons
 
-To send your buttons, create an action row and add the buttons as components. Then, send the row in the `components` property of `InteractionReplyOptions` (extends `BaseMessageOptions`).
+To send your buttons, create an action row and add the buttons as components. Then, send the row in the `components` property of <DocsLink path="InteractionReplyOptions:Interface" /> (extends <DocsLink path="BaseMessageOptions:Interface" />).
 
 ```js
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } = require('discord.js');
@@ -102,7 +102,7 @@ const button = new ButtonBuilder()
 
 ## Emoji buttons
 
-If you want to use a guild emoji within a `ButtonBuilder`, you can use the `ButtonBuilder#setEmoji` method:
+If you want to use a guild emoji within a <DocsLink path="ButtonBuilder:Class"/>, you can use the `ButtonBuilder#setEmoji` method:
 
 ```js
 const button = new ButtonBuilder()

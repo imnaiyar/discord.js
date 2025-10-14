@@ -11,7 +11,7 @@ Context Menus are application commands which appear when right clicking or tappi
 
 ## Registering context menu commands
 
-To create a context menu command, use the `ContextMenuCommandBuilder` class. You can then set the type of the context menu (user or message) using the `setType()` method.
+To create a context menu command, use the <DocsLink section="builders" path="ContextMenuCommandBuilder:Class" /> class. You can then set the type of the context menu (user or message) using the `setType()` method.
 
 ```js
 const { ContextMenuCommandBuilder, ApplicationCommandType } = require('discord.js');
@@ -32,9 +32,9 @@ client.on(Events.InteractionCreate, (interaction) => {
 
 ## Extracting data from context menus
 
-For user context menus, you can get the targeted user by accessing the `targetUser` or `targetMember` property from the `UserContextMenuCommandInteraction`.
+For user context menus, you can get the targeted user by accessing the `targetUser` or `targetMember` property from the <DocsLink path="UserContextMenuCommandInteraction:Class" />.
 
-For message context menus, you can get the targeted message by accessing the `targetMessage` property from the `MessageContextMenuCommandInteraction`.
+For message context menus, you can get the targeted message by accessing the `targetMessage` property from the <DocsLink path="MessageContextMenuCommandInteraction:Class" />.
 
 ```js
 client.on(Events.InteractionCreate, (interaction) => {

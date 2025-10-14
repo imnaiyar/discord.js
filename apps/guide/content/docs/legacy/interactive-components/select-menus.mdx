@@ -12,7 +12,7 @@ Select menus are one of the `MessageComponent` classes, which can be sent via me
 
 ## Building string select menus
 
-The "standard" and most customizable type of select menu is the string select menu. To create a string select menu, use the `StringSelectMenuBuilder` and `StringSelectMenuOptionBuilder` classes.
+The "standard" and most customizable type of select menu is the string select menu. To create a string select menu, use the <DocsLink section="builders" path="StringSelectMenuBuilder:Class"/> and <DocsLink section="builders" path="StringSelectMenuOptionBuilder:Class"/> classes.
 
 If you're a Pokémon fan, you've probably made a selection pretty similar to this example at some point in your life!
 
@@ -50,7 +50,7 @@ module.exports = {
 
 ## Sending select menus
 
-To send your select menu, create an action row and add the buttons as components. Then, send the row in the `components` property of `InteractionReplyOptions` (extends `BaseMessageOptions`).
+To send your select menu, create an action row and add the buttons as components. Then, send the row in the `components` property of <DocsLink path="InteractionReplyOptions:Interface" /> (extends <DocsLink path="BaseMessageOptions:Interface" />).
 
 ```js
 const {
@@ -121,10 +121,10 @@ const select = new StringSelectMenuBuilder().setCustomId('select').addOptions(
 
 Although the String select menu with its user-defined options is the most customizable, there are four other types of select menu that auto-populate with their corresponding Discord entities, much like slash command options. These are:
 
-- `UserSelectMenuBuilder`
-- `RoleSelectMenuBuilder`
-- `MentionableSelectMenuBuilder`
-- `ChannelSelectMenuBuilder`
+- <DocsLink section="builders" path="UserSelectMenuBuilder:Class" />
+- <DocsLink section="builders" path="RoleSelectMenuBuilder:Class" />
+- <DocsLink section="builders" path="MentionableSelectMenuBuilder:Class" />
+- <DocsLink section="builders" path="ChannelSelectMenuBuilder:Class" />
 
 The `ChannelSelectMenuBuilder` can be configured to only show specific channel types using `ChannelSelectMenuBuilder#setChannelTypes`.
 

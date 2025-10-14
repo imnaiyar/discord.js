@@ -201,7 +201,7 @@ client.on(Events.InteractionCreate, (interaction) => {
 });
 ```
 
-The return value of a `.reply()` with the `withResponse` option set to `true` is a promise which resolves with `InteractionCallbackResponse`, but how would the same code with async/await look?
+The return value of a `.reply()` with the `withResponse` option set to `true` is a promise which resolves with <DocsLink path="InteractionCallbackResponse:Class" />, but how would the same code with async/await look?
 
 ```js title="promise-example.js"
 client.on(Events.InteractionCreate, async (interaction) => {
