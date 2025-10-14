@@ -1,4 +1,6 @@
+import { ExternalLink } from 'lucide-react';
 import Link from 'next/link';
+import { useMemo } from 'react';
 
 const baseURL = 'https://discord.js.org/docs/packages';
 const sections = [
@@ -31,33 +33,31 @@ export function DocsLink({
 	path,
 	type = 'property',
 }: DocsLinkProps) {
-	const guideSection = sections.find((sec) => sec === section) ?? sections[0];
-	const link = `${baseURL}/${guideSection}/${branch}${path ? `/${path}` : ''}`;
+	const link = useMemo(() => {
+		const guideSection = sections.includes(section) ? section : sections[0];
+		return `${baseURL}/${guideSection}/${branch}${path ? `/${path}` : ''}`;
+	}, [section, branch, path]);
 
-	let linkText: string | null = null;
-	if (path) {
-		const regex = pathRegex.exec(path);
-		if (regex?.groups) {
-			const { file, type: itemType, symbol } = regex.groups;
-			const brackets = itemType === 'Function' || type === 'method' ? '()' : '';
-			if (symbol) {
-				linkText = `${file}#${symbol}${brackets}`;
-			} else {
-				linkText = `${file}${brackets}`;
+	const linkText = useMemo(() => {
+		if (path) {
+			const regex = pathRegex.exec(path);
+			if (regex?.groups) {
+				const { file, type: itemType, symbol } = regex.groups;
+				const brackets = itemType === 'Function' || type === 'method' ? '()' : '';
+				if (!symbol) return `${file}${brackets}`;
+				return `${file}#${symbol}${brackets}`;
 			}
+		} else {
+			return `${section === 'discord.js' ? '' : '@discordjs/'}${section}`;
 		}
-	} else {
-		linkText = `${section === 'discord.js' ? '' : '@discordjs/'}${section}`;
-	}
+
+		return null;
+	}, [path, section, type]);
 
 	return (
-		<Link
-			className="text-base-blurple-400 hover:text-base-blurple-500 dark:hover:text-base-blurple-300"
-			href={link}
-			rel="external noreferrer noopener"
-			target="_blank"
-		>
+		<Link className="inline-flex items-center gap-1" href={link} rel="external noreferrer noopener" target="_blank">
 			{children ?? <code>{linkText ?? ''}</code>}
+			<ExternalLink className="opacity-60" size={14} />
 		</Link>
 	);
 }
