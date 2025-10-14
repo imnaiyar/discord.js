@@ -221,7 +221,7 @@ message.reactions.removeAll().catch((error) => console.error('Failed to clear re
 
 ### Removing reactions by emoji
 
-Removing reactions by emoji is easily done by using `MessageReaction#remove`.
+Removing reactions by emoji is easily done by using <DocsLink path="MessageReaction:Class#remove" type="method" />.
 
 ```js
 message.reactions.cache
@@ -233,7 +233,7 @@ message.reactions.cache
 ### Removing reactions by user
 
 <Callout>
-	If you are not familiar with `Collection#filter` and
+	If you are not familiar with <DocsLink section="collection" path="Collection:Class#filter" type="method" /> and
 	[`Map.has()`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Map/has) take the time to
 	understand what they do and then come back.
 </Callout>

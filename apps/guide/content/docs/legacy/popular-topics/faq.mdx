@@ -6,10 +6,10 @@ title: FAQ
 
 ## Legend
 
-- `client` is a placeholder for the `Client` object, such as `const client = new Client({ intents: [GatewayIntentBits.Guilds] });`.
-- `interaction` is a placeholder for the `BaseInteraction` object, such as `client.on(Events.InteractionCreate, interaction => { ... });`.
-- `guild` is a placeholder for the `Guild` object, such as `interaction.guild` or `client.guilds.cache.get('id')`.
-- `voiceChannel` is a placeholder for the `VoiceChannel` object, such as `interaction.member.voice.channel`
+- `client` is a placeholder for the <DocsLink path="Client:Class" /> object, such as `const client = new Client({ intents: [GatewayIntentBits.Guilds] });`.
+- `interaction` is a placeholder for the <DocsLink path="BaseInteraction:Class" /> object, such as `client.on(Events.InteractionCreate, interaction => { ... });`.
+- `guild` is a placeholder for the <DocsLink path="Guild:Class" /> object, such as `interaction.guild` or `client.guilds.cache.get('id')`.
+- `voiceChannel` is a placeholder for the <DocsLink path="VoiceChannel:Class" /> object, such as `interaction.member.voice.channel`
 
 For a more detailed explanation of the notations commonly used in this guide, the docs, and the support server, see [here](../additional-info/notation).
 
@@ -144,7 +144,10 @@ channel.send('content');
 
 ### How do I create a post in a forum channel?
 
-<Callout>Currently, the only way to get tag ids is programmatically through `ForumChannel#availableTags`.</Callout>
+<Callout>
+	Currently, the only way to get tag ids is programmatically through{' '}
+	<DocsLink path="ForumChannel:Class#availableTags" />.
+</Callout>
 
 ```js
 const channel = client.channels.cache.get('id');

@@ -30,15 +30,15 @@ manager
 
 As the property names imply, the `_eval` property is what the shard is attempting to evaluate, and the `_result` property is the output of said evaluation. However, these properties are only guaranteed if a _shard_ is sending a message. There will also be an `_error` property, should the evaluation have thrown an error.
 
-You can also send messages via `process.send('hello')`, which would not contain the same information. This is why the `.message` property's type is declared as `*` in the `Shard#message` documentation.
+You can also send messages via `process.send('hello')`, which would not contain the same information. This is why the `.message` property's type is declared as `*` in the <DocsLink path="Shard:Class#message" /> documentation.
 
 ## Specific shards
 
 There might be times where you want to target a specific shard. An example would be to kill a specific shard that isn't working as intended. You can achieve this by taking the following snippet (in a command, preferably):
 
 <Callout>
-	`ShardClientUtil#ids` can hold multiple ids. If you use the default sharding manager, the `.ids` array will only have
-	one entry.
+	<DocsLink path="ShardClientUtil:Class#ids">`Client#shard`</DocsLink> can hold multiple ids. If you use the default
+	sharding manager, the `.ids` array will only have one entry.
 </Callout>
 
 ```js

@@ -30,8 +30,8 @@ client.on(Events.InteractionCreate, (interaction) => {
 This will never work for a channel that lies on another shard. So, let's remedy this.
 
 <Callout>
-	`ShardClientUtil#ids` can hold multiple ids. If you use the default sharding manager, the `.ids` array will only have
-	one entry.
+	<DocsLink path="ShardClientUtil:Class#ids">`Client#shard`</DocsLink> can hold multiple ids. If you use the default
+	sharding manager, the `.ids` array will only have one entry.
 </Callout>
 
 ```js title="bot.js"

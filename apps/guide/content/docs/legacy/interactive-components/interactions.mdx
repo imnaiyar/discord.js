@@ -4,11 +4,11 @@ title: Interactions
 
 ## Component interactions
 
-Every button click or select menu selection on a component sent by your bot fires an `interaction`, triggering the `Client#interactionCreate` event. How you decide to handle this will likely depend on the purpose of the components. Options include:
+Every button click or select menu selection on a component sent by your bot fires an `interaction`, triggering the <DocsLink path="Client:Class#interactionCreate" /> event. How you decide to handle this will likely depend on the purpose of the components. Options include:
 
 - Waiting for a single interaction via `awaitMessageComponent()` on a channel or a message.
-- Listening for multiple interactions over a period of time using an `InteractionCollector`.
-- Creating a permanent component handler in the `Client#interactionCreate` event.
+- Listening for multiple interactions over a period of time using an <DocsLink path="InteractionCollector:Class" />.
+- Creating a permanent component handler in the <DocsLink path="Client:Class#interactionCreate" /> event.
 
 <Callout>
 	This page is a follow-up to the [slash commands](../slash-commands/advanced-creation) section, and assumes you have
@@ -91,11 +91,11 @@ try {
 
 ## Component collectors
 
-For situations where you want to collect multiple interactions, the Collector approach is better suited than awaiting singular interactions. Following on from the [select menus](./select-menus) guide, you're going to extend that example to use an `InteractionCollector` to listen for multiple `StringSelectMenuInteraction`.
+For situations where you want to collect multiple interactions, the Collector approach is better suited than awaiting singular interactions. Following on from the [select menus](./select-menus) guide, you're going to extend that example to use an <DocsLink path="InteractionCollector:Class"/> to listen for multiple <DocsLink path="StringSelectMenuInteraction:Class"/>.
 
-Begin by adding `withResponse` to the options, and then calling `Message#createMessageComponentCollector` on this instance. This method returns an InteractionCollector that will fire its `InteractionCollector#collect` event whenever an interaction passes its filter (if one is provided).
+Begin by adding `withResponse` to the options, and then calling `Message#createMessageComponentCollector` on this instance. This method returns an InteractionCollector that will fire its <DocsLink path="InteractionCollector:Class#collect" /> event whenever an interaction passes its filter (if one is provided).
 
-In the `collect` event, each interaction is a `StringSelectMenuInteraction` thanks to the `componentType: ComponentType.StringSelect` option provided to the collector (and because that was the only type of component in the message). The selected value(s) are available via the `StringSelectMenuInteraction#values` property.
+In the `collect` event, each interaction is a <DocsLink path="StringSelectMenuInteraction:Class" /> thanks to the `componentType: ComponentType.StringSelect` option provided to the collector (and because that was the only type of component in the message). The selected value(s) are available via the <DocsLink path="StringSelectMenuInteraction:Class#values" /> property.
 
 ```js
 const response = await interaction.reply({
@@ -118,7 +118,7 @@ collector.on('collect', async (i) => {
 
 ## The Client#interactionCreate event
 
-Third and finally, you may wish to have a listener setup to respond to permanent button or select menu features of your guild. For this, returning to the `Client#interactionCreate` event is the best approach.
+Third and finally, you may wish to have a listener setup to respond to permanent button or select menu features of your guild. For this, returning to the <DocsLink path="Client:Class#interactionCreate" /> event is the best approach.
 
 If your event handling has been setup in multiple files as per our [event handling](../app-creation/handling-events) guide, you should already have an `events/interactionCreate.js` file that looks something like this.
 

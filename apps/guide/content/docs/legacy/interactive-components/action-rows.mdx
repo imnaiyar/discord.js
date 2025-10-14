@@ -11,14 +11,14 @@ Action rows are a layout component with five "slots" that can be filled with oth
 
 ## Building action rows
 
-To create an action row, use the `ActionRowBuilder` class and the `ActionRowBuilder#addComponents` method to add buttons or a select menu.
+To create an action row, use the <DocsLink section="builders" path="ActionRowBuilder:Class" /> class and the `ActionRowBuilder#addComponents` method to add buttons or a select menu.
 
 ```js
 const row = new ActionRowBuilder().addComponents(component);
 ```
 
 <Callout>
-If you're using TypeScript, you'll need to specify the type of components your action row holds. This can be done by specifying the component builder you will add to it using a generic parameter in `ActionRowBuilder`.
+If you're using TypeScript, you'll need to specify the type of components your action row holds. This can be done by specifying the component builder you will add to it using a generic parameter in <DocsLink section="builders" path="ActionRowBuilder:Class" />.
 
 ```js
 new ActionRowBuilder() // [!code --]
@@ -29,7 +29,7 @@ new ActionRowBuilder<ButtonBuilder>() // [!code ++]
 
 ## Sending action rows
 
-Once one or many components are inside your row(s), send them in the `components` property of your `InteractionReplyOptions` (extends `BaseMessageOptions`).
+Once one or many components are inside your row(s), send them in the `components` property of your <DocsLink path="InteractionReplyOptions:Interface" /> (extends <DocsLink path="BaseMessageOptions:Interface" />).
 
 ```js
 const row = new ActionRowBuilder().addComponents(component);
