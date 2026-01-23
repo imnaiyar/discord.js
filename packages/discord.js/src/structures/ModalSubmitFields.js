@@ -243,11 +243,10 @@ class ModalSubmitFields {
    * Get checkbox group action component
    *
    * @param {string} customId The custom id of the component
-   * @param {boolean} [required=false] Whether to throw an error if the component value is not found or empty
-   * @returns {?string[]} The selected checkbox group action option values, or null if none were selected and not required
+   * @returns {string[]} The selected checkbox group action option values
    */
-  getCheckboxGroupAction(customId, required = false) {
-    return this._getTypedComponent(customId, [ComponentType.CheckboxGroupAction], ['values'], required).values ?? null;
+  getCheckboxGroupAction(customId) {
+    return this._getTypedComponent(customId, [ComponentType.CheckboxGroupAction]).values;
   }
 
   /**
@@ -257,7 +256,7 @@ class ModalSubmitFields {
    * @returns {boolean} Whther this checkbox action was selected
    */
   getCheckboxAction(customId) {
-    return this._getTypedComponent(customId, [ComponentType.CheckboxAction], ['values']).value ?? false;
+    return this._getTypedComponent(customId, [ComponentType.CheckboxAction]).value;
   }
 }
 
