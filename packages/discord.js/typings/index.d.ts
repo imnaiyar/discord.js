@@ -2933,6 +2933,10 @@ export class ModalSubmitFields<Cached extends CacheType = CacheType> {
   public getSelectedMentionables(customId: string, required?: boolean): ModalSelectedMentionables<Cached> | null;
   public getUploadedFiles(customId: string, required: true): ReadonlyCollection<Snowflake, Attachment>;
   public getUploadedFiles(customId: string, required?: boolean): ReadonlyCollection<Snowflake, Attachment> | null;
+  public getRadioGroupAction(customId: string, required: true): string;
+  public getRadioGroupAction(customId: string, required?: boolean): string | null;
+  public getCheckboxGroupAction(customId: string): readonly string[];
+  public getCheckboxAction(customId: string): boolean;
 }
 
 export interface ModalMessageModalSubmitInteraction<Cached extends CacheType = CacheType>
