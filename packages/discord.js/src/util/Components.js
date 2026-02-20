@@ -23,8 +23,8 @@ const { ComponentType } = require('discord-api-types/v10');
 
 /**
  * @typedef {StringSelectMenuComponentData|TextInputComponentData|UserSelectMenuComponentData|
- * RoleSelectMenuComponentData|MentionableSelectMenuComponentData|ChannelSelectMenuComponentData|
- * FileUploadComponentData|RadioGroupActionComponentData|CheckboxGroupActionComponentData|CheckboxActionComponentData} ComponentInLabelData
+ * RoleSelectMenuComponentData|MentionableSelectMenuComponentData|ChannelSelectMenuComponentData|FileUploadComponentData|
+ * RadioGroupComponentData|CheckboxGroupComponentData|CheckboxComponentData} ComponentInLabelData
  */
 
 /**
