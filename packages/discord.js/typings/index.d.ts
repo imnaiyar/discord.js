@@ -7506,6 +7506,7 @@ export interface CheckboxGroupComponentData extends BaseComponentData {
 export interface CheckboxComponentData extends BaseComponentData {
   customId: string;
   default?: boolean;
+  type: ComponentType.Checkbox;
 }
 
 export type MessageTarget =
