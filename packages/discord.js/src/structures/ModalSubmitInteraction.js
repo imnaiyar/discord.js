@@ -1,3 +1,4 @@
+
 'use strict';
 
 const { Collection } = require('@discordjs/collection');
@@ -27,7 +28,7 @@ const getAttachment = lazy(() => require('./Attachment'));
 /**
  * @typedef {BaseModalData} RadioGroupModalData
  * @property {string} customId The custom id of the radio group
- * @property {string} [value] The value selected for the radio group
+ * @property {?string} value The value selected for the radio group
  */
 
 /**
